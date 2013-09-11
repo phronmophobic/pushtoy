@@ -7,8 +7,7 @@ A Leiningen plugin to make deploying clojure apps to an existing servers simple.
 ### Setup
 
 Put `[lein-pushtoy "0.1.1-SNAPSHOT"]` into the `:plugins` vector of your
-`:user` profile, or if you are on Leiningen 1.x do `lein plugin install
-lein-pushtoy 0.1.0-SNAPSHOT`.
+`:user` profile.
 
 Add the following key to your project.clj file:
 
@@ -20,16 +19,16 @@ Options for your pushtoy config are:
 * **:ips** - vector of deployment ip addresses
 * **:user** - same keys that are available under pallet.core.user, http://palletops.com/pallet/api/0.8/pallet.core.user.html
 
-   :username
-   :public-key-path : path string to public key file
-   :private-key-path : path string to private key file
-   :public-key : public key as a string or byte array
-   :private-key : private key as a string or byte array
-   :passphrase : passphrase for private key
-   :password : ssh user password
-   :sudo-password : password for sudo (defaults to :password)
-   :sudo-user : the user to sudo to
-   :no-sudo : flag to not use sudo (e.g. when the user has root privileges).
+   `:username` - username for sshing
+   `:public-key-path` - path string to public key file
+   `:private-key-path` - path string to private key file
+   `:public-key` - public key as a string or byte array
+   `:private-key` - private key as a string or byte array
+   `:passphrase` - passphrase for private key
+   `:password` - ssh user password
+   `:sudo-password` - password for sudo (defaults to :password)
+   `:sudo-user` - the user to sudo to
+   `:no-sudo` - flag to not use sudo (e.g. when the user has root privileges).
    
    
    defaults to username being root and using private and public keys as ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub
