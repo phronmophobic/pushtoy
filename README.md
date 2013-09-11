@@ -1,6 +1,6 @@
 # lein-pushtoy
 
-A Leiningen plugin to make deploying clojure apps to an existing servers simple.
+A Leiningen plugin to make deploying clojure apps to an existing servers simple. Not meant for "production", but great for side projects.
 
 ## Usage
 
@@ -17,8 +17,8 @@ Add the following key to your project.clj file:
 
 Options for your pushtoy config are:
 
-* *:ips* - vector of deployment ip addresses
-* *:user* - same keys that are available under pallet.core.user
+* **:ips** - vector of deployment ip addresses
+* **:user** - same keys that are available under pallet.core.user, http://palletops.com/pallet/api/0.8/pallet.core.user.html
 
 :username
 
@@ -43,7 +43,7 @@ Options for your pushtoy config are:
 
 defaults to username being root and using private and public keys as ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub
 
-* *:app-name* - defaults to the name of the project
+* **:app-name** - defaults to the name of the project
 
 
 ### Basic Usage
@@ -52,11 +52,11 @@ defaults to username being root and using private and public keys as ~/.ssh/id_r
 
 The available commands are:
 
-* *install*: installs java, runit, and create a service for your clojure application
-* *deploy*: deploys your uberjar in a location that can be run from runit
-* *start*: starts your deployed uberjar using runit
-* *stop*: stops your application via runit
-* *restart*: restarts your application via runit
+* **install**: installs java, runit, and create a service for your clojure application
+* **deploy**: deploys your uberjar in a location that can be run from runit
+* **start**: starts your deployed uberjar using runit
+* **stop**: stops your application via runit
+* **restart**: restarts your application via runit
 
 
 ### Initial deployment
