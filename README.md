@@ -38,9 +38,9 @@ Options for your pushtoy config are:
 
 ### Basic Usage
 
-    $ lein pushtoy commands...
+    $ lein pushtoy <command>...
 
-The available commands are:
+Available commands:
 
 * **install**: installs java, runit, and creates a service for your clojure application
 * **deploy**: deploys your uberjar in a location that can be run from runit

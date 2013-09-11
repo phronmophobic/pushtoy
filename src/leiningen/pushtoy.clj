@@ -4,9 +4,34 @@
 
 
 (def help-text
-  "this is help text.
+  "Simple deployment.
 
-more info")
+usage: lein pushtoy <command>...
+
+Available commands:
+
+  install: installs java, runit, and creates a service for your clojure application
+  deploy: deploys your uberjar in a location that can be run from runit
+  start: starts your deployed uberjar using runit
+  stop: stops your application via runit
+  restart: restarts your application via runit
+
+Configuration:
+
+  Add the following key to your project.clj file:
+  
+  :pushtoy {:ips [\"<first ip>\" \"<second ip>\"]
+            :user {:username \"ubuntu  \"}]}
+  
+
+Examples:
+
+  First deployment
+  $ lein do uberjar, pushtoy install deploy restart
+
+  Subsequent deployments
+  $ lein do uberjar, pushtoy deploy restart
+")
 
 (def command-map
   {"install" [:install :configure]
