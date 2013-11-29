@@ -1,5 +1,6 @@
 (ns leiningen.pushtoy
-)
+  (:require [leiningen.jar :as jar]
+            [leiningen.core.project :as project]))
 
 
 
@@ -91,7 +92,9 @@ Examples:
            service ((resolve 'configure/compute-service-from-map) service-spec)
            app-root (str "/opt/" app-name)
            app-jar (str app-name ".jar")
-           project-path (str "target/" app-name "-%s-standalone.jar")
+
+           project-path (jar/get-jar-filename (project/merge-profiles project [:uberjar])
+                                              :standalone)
            run-command (str "java -jar " app-root "/" app-jar)
            deploy-spec ((resolve 'deploy/server-spec)
                         {:app-root app-root
@@ -106,7 +109,6 @@ Examples:
                         )
            ;; https://github.com/rstradling/nginx-crate
            nginx-settings {:sites [{:action :enable
-                                    ;; Notice the .site file extension.  See the README notes section for more information.
                                     :name (str app-name ".site") 
                                     :upstreams [{:lines [{:server (str "127.0.0.1:" port)}
                                                          {:keepalive 32}]
