@@ -21,7 +21,9 @@ Configuration:
   Add the following key to your project.clj file:
   
   :pushtoy {:ips [\"<first ip>\" \"<second ip>\"]
-            :user {:username \"ubuntu  \"}]}
+            :port <port>
+            :server-name \"<server name>\"
+            :user {:username \"ubuntu\"}]}
   
 
 Examples:
@@ -36,7 +38,7 @@ Examples:
 (def command-map
   {"install" [:install :configure]
    "deploy" [:deploy :restart]
-   "start" [:start]
+   "start" [:start :run]
    "stop" [:stop]
    "restart" [:restart]})
 
@@ -47,8 +49,10 @@ Examples:
      (assert (every? #(contains? command-map %) commands)
              (str "Invalid command list: " commands "\n\n" help-text))
 
+     ;; require here instead of in ns so that other commands (eg. help) 
+     ;; run more quickly
      (require                             
-                                        
+
       '[pallet.core :as core]
 
       '[pallet.compute.node-list :as node-list]
@@ -58,6 +62,7 @@ Examples:
       '[pallet.crate.runit :as runit]
       '[pallet.crate.java :as java]
       '[pallet.crate.app-deploy :as deploy]
+      '[pallet.crate.nginx :as nginx]
       )
      
      (let [phases (into [] (mapcat command-map commands))
@@ -65,6 +70,8 @@ Examples:
            options (:pushtoy project)
            app-name (get options :app-name (:name project))
            ips (:ips options)
+           port (:port options)
+           server-name (:server-name options)
            _ (assert ips "ips should be a vector of ip strings")
            user (get options :user
                      {:username "root"})
@@ -97,10 +104,31 @@ Examples:
                          }
                         :instance-id (keyword app-name)
                         )
+           ;; https://github.com/rstradling/nginx-crate
+           nginx-settings {:sites [{:action :enable
+                                    ;; Notice the .site file extension.  See the README notes section for more information.
+                                    :name (str app-name ".site") 
+                                    :upstreams [{:lines [{:server (str "127.0.0.1:" port)}
+                                                         {:keepalive 32}]
+                                                 :name (str "http_backend_" app-name)}]
+                                    :servers [
+                                              {:access-log ["/var/log/nginx/app.access.log"]
+                                               :server-name server-name
+                                               :locations [{:path "/"
+                                                            :proxy-pass (str "http://http_backend_" app-name)
+                                                            :proxy-http-version "1.1"
+                                                            :proxy-set-header [{:Connection "\"\""},
+                                                                               {:X-Forwarded-For 
+                                                                                "$proxy_add_x_forwarded_for"}, 
+                                                                               {:Host "$http_host"}]}]}]}]}
            group ((resolve 'core/group-spec) group-id
-                                  :extends [((resolve 'java/server-spec) {})
-                                            ((resolve 'runit/server-spec) {})
-                                            deploy-spec])]
+                                  :extends (vec
+                                            (concat
+                                             [((resolve 'java/server-spec) {})
+                                              ((resolve 'runit/server-spec) {})]
+                                             (when (and server-name port)
+                                               [((resolve 'nginx/nginx) nginx-settings)])
+                                             [deploy-spec])))]
        ((resolve 'core/lift) group
                   :phase phases
                   :compute service
