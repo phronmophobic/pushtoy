@@ -36,7 +36,7 @@ Examples:
 ")
 
 (def command-map
-  {"install" [:install :configure]
+  {"install" [:settings :install :configure]
    "deploy" [:deploy :restart]
    "start" [:start :run]
    "stop" [:stop]
@@ -123,7 +123,9 @@ Examples:
                                                                                {:X-Forwarded-For 
                                                                                 "$proxy_add_x_forwarded_for"}, 
                                                                                {:Host "$http_host"}]}]}]}]
-                           :version "1.4.4"}
+                           :version "1.4.4"
+                           :configuration {:gzip "on;\nserver_names_hash_bucket_size 64"}
+                           }
            group ((resolve 'core/group-spec) group-id
                                   :extends (vec
                                             (concat
