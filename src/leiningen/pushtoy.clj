@@ -117,10 +117,13 @@ Examples:
                                                :locations [{:path "/"
                                                             :proxy-pass (str "http://http_backend_" app-name)
                                                             :proxy-http-version "1.1"
-                                                            :proxy-set-header [{:Connection "\"\""},
+
+                                                            :proxy-set-header [{:Connection "upgrade"},
+                                                                               {:Upgrade "$http_upgrade"}
                                                                                {:X-Forwarded-For 
                                                                                 "$proxy_add_x_forwarded_for"}, 
-                                                                               {:Host "$http_host"}]}]}]}]}
+                                                                               {:Host "$http_host"}]}]}]}]
+                           :version "1.4.4"}
            group ((resolve 'core/group-spec) group-id
                                   :extends (vec
                                             (concat
