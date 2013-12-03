@@ -59,7 +59,7 @@ Examples:
       '[pallet.compute.node-list :as node-list]
       '[pallet.configure :as configure]
 
-
+      '[pallet.crate.datomic :as datomic]
       '[pallet.crate.runit :as runit]
       '[pallet.crate.java :as java]
       '[pallet.crate.app-deploy :as deploy]
@@ -128,11 +128,18 @@ Examples:
                            :version "1.4.4"
                            :configuration {:gzip "on;\nserver_names_hash_bucket_size 64"}
                            }
+           datomic-settings {;:version "0.9.4324"
+                             :supervisor :upstart
+                             :config {:protocol "free", :host "localhost" :port "4334"
+                                      :data-dir "/var/lib/datomic/data"
+                                      :log-dir "/var/log/datomic"
+                                      :jvm-opts "-Xms400m -Xmx400m"}}
            group ((resolve 'core/group-spec) group-id
                                   :extends (vec
                                             (concat
                                              [((resolve 'java/server-spec) {})
-                                              ((resolve 'runit/server-spec) {})]
+                                              ((resolve 'runit/server-spec) {})
+                                              ((resolve 'datomic/server-spec) datomic-settings)]
                                              (when (and server-name port)
                                                [((resolve 'nginx/nginx) nginx-settings)])
                                              [deploy-spec])))]
