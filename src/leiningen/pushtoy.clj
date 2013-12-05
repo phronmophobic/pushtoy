@@ -133,7 +133,7 @@ Examples:
                              :config {:protocol "free", :host "localhost" :port "4334"
                                       :data-dir "/var/lib/datomic/data"
                                       :log-dir "/var/log/datomic"
-                                      :jvm-opts "-Xms400m -Xmx400m"}}
+                                      :jvm-opts "-Xms64m -Xmx1g"}}
            group ((resolve 'core/group-spec) group-id
                                   :extends (vec
                                             (concat
